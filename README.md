@@ -40,3 +40,20 @@ gcc (Ubuntu 14.2.0-4ubuntu2~24.04) 14.2.0
 ...
 ```
 
+## Install dependencies
+```
+$ sudo apt-get install catch2
+```
+
+## Building & Running
+```
+$ mkdir build && cd build
+build $ cmake .. -DCMAKE_BUILD_TYPE=Debug
+...
+build $ make all test
+...
+Running tests...
+Test project /home/alex/src/trading-platform/build
+    Start 1: basic_test
+1/1 Test #1: basic_test .......................   Passed    0.00 sec
+```

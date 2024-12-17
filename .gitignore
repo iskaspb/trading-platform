@@ -1,0 +1,11 @@
+# vs code
+.vscode/*
+
+# CMAKE / BUILD
+build/
+CMakeCache.txt
+CMakeFiles*
+
+*.log
+*.zip
+*.docx#

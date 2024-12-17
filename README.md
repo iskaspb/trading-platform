@@ -28,8 +28,15 @@ $ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 14 --slave
 Select and check gcc version
 ```
 $ sudo update-alternatives --config gcc
-$ gcc --version
+There is 1 choice for the alternative gcc (providing /usr/bin/gcc).
 
+  Selection    Path             Priority   Status
+------------------------------------------------------------
+* 0            /usr/bin/gcc-14   14        auto mode
+  1            /usr/bin/gcc-14   14        manual mode
+
+$ gcc --version
 gcc (Ubuntu 14.2.0-4ubuntu2~24.04) 14.2.0
 ...
 ```
+

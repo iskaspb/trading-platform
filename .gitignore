@@ -9,3 +9,6 @@ CMakeFiles*
 *.log
 *.zip
 *.docx#
+
+# Do not commit local sandbox without big reasons (you still can do it by force)
+apps/sandbox/**/*

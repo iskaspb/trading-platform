@@ -23,5 +23,5 @@ enable_testing()
 # Add include directories
 include_directories(${CMAKE_SOURCE_DIR})
 
-# Add subdirectories for each binary
+add_subdirectory(apps)
 add_subdirectory(tests)

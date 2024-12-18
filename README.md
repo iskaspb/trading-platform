@@ -41,6 +41,7 @@ gcc (Ubuntu 14.2.0-4ubuntu2~24.04) 14.2.0
 ```
 
 ## Install dependencies
+Unit test framework:
 ```
 $ sudo apt-get install catch2
 ```
@@ -57,3 +58,10 @@ Test project /home/alex/src/trading-platform/build
     Start 1: basic_test
 1/1 Test #1: basic_test .......................   Passed    0.00 sec
 ```
+
+## Tips and tricks for VSCode
+1. Install CMake tools and C/C++ Extension Pack plugins;
+2. Configure project using CMake (you can see it in the status bar in the bottom) - you might need to select GCC version in the drop down menu;
+3. To build project you can press "Build" in the status bar (or you can do the same but select a specific target instead of "all");
+4. CTRL-SHIFT-B to build (you might need to generate a task to skip drop down menu - this is done by selecting config button when the drop down menu appears);
+5. CTRL-F5 to build and run (it's useful for tests - you can select basic_test as a target to try it)

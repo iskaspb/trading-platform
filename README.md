@@ -1,6 +1,10 @@
-# Preparing dev env
+## Preparing dev env
+You may choose to build and run the platform and associated apps natively on your machine or you can use docker container.
+Docker path is less cumbersome in terms of dependency management, however it provides less integration with your host dev env.
+<details>
+<summary><b>"Native" setup on dev box</b></summary>
 
-## Install GCC on Ubuntu
+### Install GCC on Ubuntu
 Refreshing the apt database:
 
 ```
@@ -40,13 +44,26 @@ gcc (Ubuntu 14.2.0-4ubuntu2~24.04) 14.2.0
 ...
 ```
 
-## Install dependencies
+### Install dependencies
 Unit test framework:
 ```
 $ sudo apt-get install catch2
 ```
 
-## Building & Running
+</details>
+
+<details>
+<summary><b>Use pre-built docker image</b></summary>
+TODO...
+</details>
+
+<details>
+<summary><b>Build your own docker image</b></summary>
+TODO...
+</details>
+
+### Build & Run
+This will build everything and runs available unit tests:
 ```
 $ mkdir build && cd build
 build $ cmake .. -DCMAKE_BUILD_TYPE=Debug
@@ -58,26 +75,21 @@ Test project /home/alex/src/trading-platform/build
     Start 1: basic_test
 1/1 Test #1: basic_test .......................   Passed    0.00 sec
 ```
+For more interesting examples you can try [apps and tools](apps/README.md)
 
-## Tips and tricks for VSCode
+<details>
+<summary><b>Tips and tricks for VSCode</b></summary>
+
 1. Install CMake tools and C/C++ Extension Pack plugins;
 2. Configure project using CMake (you can see it in the status bar in the bottom) - you might need to select GCC version in the drop down menu;
 3. To build project you can press "Build" in the status bar (or you can do the same but select a specific target instead of "all");
 4. CTRL-SHIFT-B to build (you might need to generate a task to skip drop down menu - this is done by selecting config button when the drop down menu appears);
 5. CTRL-F5 to build and run (it's useful for tests - you can select basic_test as a target to try it)
+ 
+</details>
 
-## Sandbox area
-In order to simplify a creation of new apps, we have a "sandbox" area, see apps/sandbox. You can use it by running `add_sandbox_app.py` script, e.g.:
-```
-alex@ubun:~/src/trading-platform/build$ ../apps/sandbox/add_sandbox_app.py hello_world
-Added sandbox app in folder hello_world
-alex@ubun:~/src/trading-platform/build$ make
-...
-[ 50%] Building CXX object apps/sandbox/hello_world/CMakeFiles/hello_world.dir/main.cpp.o
-[ 66%] Linking CXX executable ../../../bin/hello_world
-[ 66%] Built target hello_world
-...
-alex@ubun:~/src/trading-platform/build$ ./bin/hello_world 
-Hello, hello_world!
-```
-Typical use case - when you want to create a new application and you want to have CMakeLists.txt to be generated atomatically for you together with essential dependencies. This folder is exempt from `git commit` (in .gitignore) so you do not accidentelly commit/push your local experiments. You can start your app in sandbox and then move it to more approapriate location.
+## Platform components
+1. [Core framework](core/README.md)
+2. [Applicaitons and tools](apps/README.md)
+3. [Unit tests](tests/README.md)
+

@@ -1,8 +1,8 @@
-## Preparing dev env
+## Prepare dev env
 You may choose to build and run the platform and associated apps natively on your machine or you can use docker container.
 Docker path is less cumbersome in terms of dependency management, however it provides less integration with your host dev env.
 <details>
-<summary><b>"Native" setup on dev box</b></summary>
+<summary><b>Native setup on dev box</b></summary>
 
 ### Install GCC on Ubuntu
 Refreshing the apt database:

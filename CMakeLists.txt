@@ -22,6 +22,7 @@ enable_testing()
 
 # Add include directories
 include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/core)
 
 # boost
 set(Boost_DEBUG FALSE)

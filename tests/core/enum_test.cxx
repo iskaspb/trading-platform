@@ -1,5 +1,5 @@
 #include <catch2/catch_all.hpp>
-#include <core/util/enum.h>
+#include <util/enum.h>
 
 ENUM(MyType, ZERO, ONE, TWO);
 ENUM_CLASS(MyType2, ZERO, ONE, TWO);

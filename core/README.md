@@ -34,7 +34,7 @@ Here is incomplete list of promising high performance loggers available to the p
 For a starter we suggest using conventional logger like [boost::log](https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html) and when performance becomes important, then it's time to switch to high perf loggers or some ad-hoc logging.
 
 ## Application
-In order to simplify definition of new applications and integrate it into common execution environment there are set of helper classes that goes beyond `main(argc, argv)`. They help to find associate configuration file, start all necessary process facilities (e.g. logger) and finally start up a target component (e.g. strategy under strategy runner).
+In order to simplify creation of new trading and utility apps and integrate them into common execution environment there are set of helper classes that goes beyond `main(argc, argv)`. They help to find associated configuration file, start all necessary process facilities (e.g. logger) and finally start up a target component (e.g. strategy under strategy runner).
 
 ## Networking and I/O
 We start by using public I/O and network protocol implementations (TCP, HTTP1/2, WebSocket...), e.g. [boost::asio](https://www.boost.org/doc/libs/1_84_0/doc/html/boost_asio.html), [libevent](https://libevent.org/)  etc. Later we add our own (possibly more high performance) implementations.

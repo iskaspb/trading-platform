@@ -78,12 +78,12 @@ TODO...
 </details>
 
 ### Build & Run
-This will build everything and runs available unit tests:
+This will build everything and run available unit tests:
 ```
-$ mkdir build && cd build
-build $ cmake .. -DCMAKE_BUILD_TYPE=Debug
+trading-platform$ mkdir build && cd build
+trading-platform/build$ cmake .. -DCMAKE_BUILD_TYPE=Debug
 ...
-build $ make all test
+trading-platform/build$ make all test
 ...
 Running tests...
 Test project /home/alex/src/trading-platform/build

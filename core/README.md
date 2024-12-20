@@ -3,7 +3,7 @@
 ## Configuration
 Configuration is an important part of a trading strategy and related applications (e.g. MD capture). The key component of a configuration framework is a mapping between the serialized form of configuration (e.g. JSON) and the internal structures that represent configuration for the C++ code. The answer for the question - "why can't we use directly DOM produced by preferred JSON parser?" is usability. JSON (or any other generic hierarchical data format) may need some data conversion and/or validation before it can be used by the internal components.
 
-There are a number of options for JSON/C++ mapping that are available as public libraries or frameworks. Our default choice is the [nlohmann](https://github.com/nlohmann/json) JSON parser that is both simple to use and feature rich.
+There are a number of options for JSON/C++ mapping that are available as public libraries or frameworks. Our default choice is the [nlohmann](https://github.com/nlohmann/json) JSON parser that is both simple to use and feature rich. You can see the basic JSON/C++ mapping example in [sandbox/config_example](../apps/sandbox/config_example/main.cpp)
 
 ## Integration
 This is a collection of facilities for internal integration/binding. There are a number of ways to integrate C++ components, starting from basic function calls or object oriented interfaces with virtual functions and continue with generic std::function etc.

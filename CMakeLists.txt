@@ -31,7 +31,7 @@ find_package(Boost COMPONENTS filesystem iostreams program_options regex log SYS
 message(STATUS "Found Boost ${Boost_VERSION}")
 message(STATUS "Found Boost ${Boost_INCLUDE_DIRS}")
 
-# nlohmann_json
+# nlohmann json
 find_package(nlohmann_json 3.11 REQUIRED)
 
 # rapid json

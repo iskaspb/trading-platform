@@ -33,11 +33,11 @@ Here is incomplete list of promising high performance loggers available to the p
 ### Logging summary
 For a starter we suggest using conventional logger like [boost::log](https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html) and when performance becomes important, then it's time to switch to high perf loggers or some ad-hoc logging.
 
-## Networking
-We start by using public network protocol implementations (TCP, HTTP1/2, WebSocket...), e.g. [boost::asio](https://www.boost.org/doc/libs/1_84_0/doc/html/boost_asio.html), [libevent](https://libevent.org/)  etc. Later we add our own (possibly more high performance) implementations.
+## Networking and I/O
+We start by using public I/O and network protocol implementations (TCP, HTTP1/2, WebSocket...), e.g. [boost::asio](https://www.boost.org/doc/libs/1_84_0/doc/html/boost_asio.html), [libevent](https://libevent.org/)  etc. Later we add our own (possibly more high performance) implementations.
 
 ## Utilities
 This is a collection of basic platform utilities, e.g. [ENUM](https://www.scs.stanford.edu/~dm/blog/va-opt.html) macro that simplifies definition of enumerations.
 
-## Performance measurements
+## Performance measurement
 The platform has built-in performance trace collector with the tools to produce offline or realtime performance stats

@@ -45,9 +45,24 @@ gcc (Ubuntu 14.2.0-4ubuntu2~24.04) 14.2.0
 ```
 
 ### Install dependencies
-Unit test framework:
+Collection of [Boost libraries](https://www.boost.org/):
 ```
-$ sudo apt-get install catch2
+$ sudo apt-get install libboost-all-dev -y
+```
+
+[JSON parser for Modern C++](https://github.com/nlohmann/json):
+```
+$ sudo apt-get install nlohmann-json3-dev -y
+```
+
+[Low abstraction JSON parser](https://rapidjson.org/):
+```
+$ sudo apt-get install rapidjson-dev -y
+```
+
+[Catch2 unit testing framework](https://github.com/catchorg/Catch2):
+```
+$ sudo apt-get install catch2 -y
 ```
 
 </details>

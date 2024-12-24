@@ -1,6 +1,7 @@
 #include <iostream>
 
-int main() {
+int main()
+{
     std::cout << "Hello, logger_example!" << std::endl;
     return 0;
 }

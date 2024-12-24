@@ -1,5 +1,5 @@
 file(GLOB SRC *.cpp)
 app(
     config_example EXCLUDE_FROM_ALL SRC ${SRC}
-    DEPENDENCIES nlohmann_json::nlohmann_json #${BOOST_LIBS}
+    LINK_OPTIONS nlohmann_json::nlohmann_json
 )

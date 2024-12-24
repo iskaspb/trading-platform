@@ -13,6 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Define build modes
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+add_compile_options(-Wall -Wextra -Wpedantic)
 
 # Put all binaries in the bin directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -24,13 +25,12 @@ enable_testing()
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/core)
 
-# boost
+# Current Boost setup depends on auto-linking feature of Boost, which means you don't need to define anything except ${Boost_LIBRARIES} in dependencies
 set(Boost_DEBUG FALSE)
-set(Boost_USE_STATIC_LIBS ON CACHE INTERNAL "" FORCE)
+#set(Boost_USE_STATIC_LIBS ON CACHE INTERNAL "" FORCE) # Review more efficient boost linking when start perf optimization
 set(Boost_USE_RELEASE_LIBS ON CACHE INTERNAL "" FORCE)
-find_package(Boost COMPONENTS filesystem iostreams program_options regex log SYSTEM REQUIRED)
-message(STATUS "Found Boost ${Boost_VERSION}")
-message(STATUS "Found Boost ${Boost_INCLUDE_DIRS}")
+find_package(Boost REQUIRED COMPONENTS filesystem iostreams program_options regex log) # SYSTEM)
+message(STATUS "Found Boost ${Boost_VERSION}, includes: ${Boost_INCLUDE_DIRS}, libs: ${Boost_LIBRARIES}")
 
 # nlohmann json
 find_package(nlohmann_json 3.11 REQUIRED)

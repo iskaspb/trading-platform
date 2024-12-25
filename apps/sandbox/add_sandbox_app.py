@@ -10,7 +10,8 @@ def createCmake(appName):
     content = f"""file(GLOB SRC *.cpp)
 app(
     {appName} EXCLUDE_FROM_ALL SRC ${{SRC}}
-    #DEPENDENCIES ${{BOOST_LIBS}} ...
+    #COMPILER_OPTIONS ...
+    #LINK_OPTIONS ${{Boost_LIBRARIES}} ...
 )
 """
     with open(f"{appName}/CMakeLists.txt", "w") as f:
@@ -28,6 +29,9 @@ int main() {{
     with open(f"{appName}/main.cpp", "w") as f:
         f.write(content)
 
+def touch(filename):
+    with open(filename, 'a'):
+        os.utime(filename, None)
 
 def main():
     parser = argparse.ArgumentParser(description="Create a new sandbox app")
@@ -50,6 +54,7 @@ def main():
     os.mkdir(appName)
     createCmake(appName)
     createMain(appName)
+    touch(f"{appName}/CMakeLists.txt")
     print(f"Added sandbox app in folder {appName}")
 
 

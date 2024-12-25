@@ -10,9 +10,9 @@ endif()
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Define build modes
+# Define compile flags for debug/release build modes
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 add_compile_options(-Wall -Wextra -Wpedantic)
 
 # Put all binaries in the bin directory
@@ -29,7 +29,7 @@ include_directories(${CMAKE_SOURCE_DIR}/core)
 set(Boost_DEBUG FALSE)
 #set(Boost_USE_STATIC_LIBS ON CACHE INTERNAL "" FORCE) # Review more efficient boost linking when start perf optimization
 set(Boost_USE_RELEASE_LIBS ON CACHE INTERNAL "" FORCE)
-find_package(Boost REQUIRED COMPONENTS filesystem iostreams program_options regex log) # SYSTEM)
+find_package(Boost REQUIRED COMPONENTS filesystem iostreams program_options regex log_setup log)
 message(STATUS "Found Boost ${Boost_VERSION}, includes: ${Boost_INCLUDE_DIRS}, libs: ${Boost_LIBRARIES}")
 
 # nlohmann json

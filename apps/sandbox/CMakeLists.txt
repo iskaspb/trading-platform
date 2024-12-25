@@ -1,6 +1,8 @@
 file(GLOB children *)
 foreach(child ${children})
     if(IS_DIRECTORY ${child})
+        get_filename_component(FOLDER_NAME ${child} NAME)
+        MESSAGE(STATUS "Found sandbox app: ${FOLDER_NAME}")
         add_subdirectory(${child})
     endif()
 endforeach()

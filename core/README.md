@@ -25,10 +25,64 @@ We need to be more careful with "critical path" logging. The best answer is not 
 
 Apart from performance considerations there are questions that affect usability of a logger : output format, log file management, log rotation, single/multi-threaded logger, ... - they are parts of the idiosyncrasy of a particular logger implementation and is difficult to generalize.
 
-Here is incomplete list of promising high performance loggers available to the public:
+<details>
+<summary><b>More details on logging selection and use cases</b></summary>
+
+The platform will use [boost::log](https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html) library as a general purpose logger. And for the critical path we will use ad-hoc hybrid solution that is more similar to tracing rather than logging (TBD).
+The general app logging system will support 2 levels of logging:
+1. The global logger is initialized at the application start:
+    ```
+    BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(appLogger, src::logger_mt)
+    ```
+    The global appLogger will have the following format (fields: timestamp, severity, filename:line and log message):
+    ```
+    2024-11-24 07:37:06.712746 DEBUG FileName.h:43 This is debug message with some data : 123
+    2024-11-24 07:37:07.712746 INFO  FileName.h:43 This is info message
+    2024-11-24 07:37:08.123456 WARN  FileName.h:43 This is warning message
+    2024-11-24 07:37:09.123456 ERROR FileName.h:43 This is error message
+    ```
+    The global logger will be available via set of convenient macros, e.g.:
+    ```
+    LOG_DEBUG("This is debug message with some data : " << 1 << 2 << 3);
+    LOG_INFO(...)
+    LOG_WARN(...)
+    LOG_ERROR(...)
+    ```
+    Another version if the logger macros accepts the logger as the first parameter:
+    ```
+    auto& logger = appLogger::get(); //..."cache" the reference to global logger so you call singleton every time.
+    ...
+    LOG_DEBUG(logger, "This is debug message with some data : " << 1 << 2 << 3);
+    LOG_INFO(logger, ...)
+    LOG_WARN(logger, ...)
+    LOG_ERROR(logger, ...)
+    ```
+
+The global logger is configured on application level with the options:
+    * filename/console (default : console)
+    * rotation policy (default: every 10 megabytes, and on midnight UTC)
+    * format (default format is described above)
+
+2. A local logger is initialized by any component if it needs to define specific logging format or mode, for example:
+    a. Add a tag for simpler filtering, e.g.:
+    ```
+    2024-11-24 07:37:07.712746 INFO  [FEEDER] FileName.h:43 This is feeder log message
+    2024-11-24 07:37:07.712746 INFO  [TRADING] FileName.h:43 This is trading strategy log message
+    ```
+    b. Use single threaded logger for less overhead compare to multi-threaded version;
+    c. Use different severity for the message of specific component. For instance, if we are more interested in detailed logging from a trading strategy (severity : info) and less interested in the feeder logs (severity : warning)
+
+</details>
+
+<details>
+<summary><b>Incomplete list of promising high performance loggers available to the public</b></summary>
+These loggers offer higher performance however they are more difficult to use. We can consider them when the platform become more mature.
+
 1. [spdlog](https://github.com/gabime/spdlog);
 2. [binlog](https://github.com/morganstanley/binlog);
 3. [NanoLog](https://github.com/PlatformLab/NanoLog) with [explanatory paper](https://www.usenix.org/system/files/conference/atc18/atc18-yang.pdf);
+
+</details>
 
 ### Logging summary
 For a starter we suggest using conventional logger like [boost::log](https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html) and when performance becomes important, then it's time to switch to high perf loggers or some ad-hoc logging.

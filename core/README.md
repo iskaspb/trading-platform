@@ -59,24 +59,26 @@ The general app logging system will support 2 levels of logging:
     ```
 
 The global logger is configured on application level with the options:
-    * filename/console (default : console)
-    * rotation policy (default: every 10 megabytes, and on midnight UTC)
-    * format (default format is described above)
+
+* filename/console (default : console)
+* rotation policy (default: every 10 megabytes, and on midnight UTC)
+* format (default format is described above)
 
 2. A local logger is initialized by any component if it needs to define specific logging format or mode, for example:
-    a. Add a tag for simpler filtering, e.g.:
-    ```
-    2024-11-24 07:37:07.712746 INFO  [FEEDER] FileName.h:43 This is feeder log message
-    2024-11-24 07:37:07.712746 INFO  [TRADING] FileName.h:43 This is trading strategy log message
-    ```
-    b. Use single threaded logger for less overhead compare to multi-threaded version;
-    c. Use different severity for the message of specific component. For instance, if we are more interested in detailed logging from a trading strategy (severity : info) and less interested in the feeder logs (severity : warning)
+
+* Add a tag for simpler filtering, e.g.:
+```
+2024-11-24 07:37:07.712746 INFO  [FEEDER] FileName.h:43 This is feeder log message
+2024-11-24 07:37:07.712746 INFO  [TRADING] FileName.h:43 This is trading strategy log message
+```
+* Use single threaded logger for less overhead compare to multi-threaded version;
+* Use different severity for the message of specific component. For instance, if we are more interested in detailed logging from a trading strategy (severity : info) and less interested in the feeder logs (severity : warning).
 
 </details>
 
 <details>
 <summary><b>Incomplete list of promising high performance loggers available to the public</b></summary>
-These loggers offer higher performance however they are more difficult to use. We can consider them when the platform become more mature.
+These loggers offer higher performance however they are more difficult to use. We can consider them when the platform becomes more mature.
 
 1. [spdlog](https://github.com/gabime/spdlog);
 2. [binlog](https://github.com/morganstanley/binlog);

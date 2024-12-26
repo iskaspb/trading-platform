@@ -1,5 +1,6 @@
 file(GLOB SRC *.cpp)
 app(
     logger_example EXCLUDE_FROM_ALL SRC ${SRC}
-    LINK_OPTIONS ${BOOST_LIBS}
+    COMPILE_OPTIONS -DBOOST_ALL_DYN_LINK
+    LINK_OPTIONS ${Boost_LIBRARIES}
 )

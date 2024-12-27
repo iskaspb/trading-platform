@@ -43,6 +43,10 @@
         {                                                                                                              \
             FOR_EACH(ENUM_CASE, __VA_ARGS__)                                                                           \
         default:                                                                                                       \
-            return #type "::<unknown>";                                                                                \
+            return #type "::<unknown>"sv;                                                                              \
         }                                                                                                              \
+    }                                                                                                                  \
+    inline std::ostream &operator<<(std::ostream &os, type _e)                                                         \
+    {                                                                                                                  \
+        return os << toString(_e);                                                                                     \
     }

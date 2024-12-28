@@ -28,7 +28,7 @@ Apart from performance considerations there are questions that affect usability 
 <details>
 <summary><b>More details on logging selection and use cases</b></summary>
 
-The platform will use [boost::log](https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html) library as a general purpose logger. And for the critical path we will use ad-hoc hybrid solution that is more similar to tracing rather than logging (TBD).
+The platform will use [boost::log](https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html) library as a general purpose logger (please see [mini-example](../apps/sandbox/logger_example/main.cpp)). For the critical path we will use ad-hoc hybrid solution that is more similar to tracing rather than logging (TBD).
 The general app logging system will support 2 levels of logging:
 1. The global logger is initialized at the application start:
     ```

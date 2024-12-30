@@ -111,7 +111,7 @@ In order to simplify creation of new trading and utility apps and integrate them
 When application is [looking for an associated config](app/configLocator.h) file it follows these steps:
 
 #### Explicit config definition:
-1. Anything that is passed as `--config/-C` cmdline parameter is treated as a config file;
+1. Anything that is passed as `--config/-c` cmdline parameter is treated as a config file;
     Example: `./app --config /path/to/config.json`
 2. If config file is not set via command line, then the application searches for `$APP_CONFIG` environment variable;
     Example: `APP_CONFIG=/path/to/config.json ./app`

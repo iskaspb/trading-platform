@@ -75,6 +75,7 @@ TODO...
 <details>
 <summary><b>Build your own docker image</b></summary>
 
+### Build and run docker image locally
 ```
 $ docker build -t trading-platform ./docker
 ...

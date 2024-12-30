@@ -74,7 +74,17 @@ TODO...
 
 <details>
 <summary><b>Build your own docker image</b></summary>
-TODO...
+
+```
+$ docker build -t trading-platform ./docker
+...
+$ docker run -it --name trading-platform -dp 2223:22 \
+    --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
+    -v /Users/alex/work/trading-platform:/home/user/trading-platform trading-platform
+$ ssh user@localhost -p 2223
+  -> password
+```
+
 </details>
 
 ### Build & Run

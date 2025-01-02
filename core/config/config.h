@@ -4,6 +4,9 @@
 
 #include <optional>
 
+#define DEFINE_CONFIG(...) NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(__VA_ARGS__)
+#define DEFINE_CONFIG_ENUM(...) NLOHMANN_JSON_SERIALIZE_ENUM(__VA_ARGS__)
+
 namespace nlohmann
 {
 template <typename T> struct adl_serializer<std::optional<T>>

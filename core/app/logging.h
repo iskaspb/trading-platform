@@ -1,5 +1,6 @@
 #pragma once
 
+#include <config/config.h>
 #include <util/enum.h>
 
 // TODO: think how to put all boost::log includes into precompiled headers
@@ -31,6 +32,13 @@ namespace attrs = boost::log::attributes;
 
 ENUM_CLASS(LogLevel, DEBUG, INFO, WARN, ERROR)
 
+NLOHMANN_JSON_SERIALIZE_ENUM(LogLevel, {
+                                           {LogLevel::DEBUG, "debug"},
+                                           {LogLevel::INFO, "info"},
+                                           {LogLevel::WARN, "warn"},
+                                           {LogLevel::ERROR, "error"},
+                                       })
+
 BOOST_LOG_ATTRIBUTE_KEYWORD(loglevel, "Severity", LogLevel)
 
 BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(logger, log::src::severity_logger_mt<app::LogLevel>)
@@ -40,14 +48,41 @@ BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(logger, log::src::severity_logger_mt<app:
 struct LogConfig
 {
     LogLevel level = LogLevel::INFO;
-    struct FileStore
+    struct File
     {
         std::string name;
         std::optional<std::size_t> rotationSize;
     };
-    std::optional<FileStore> file; //... if not set than console
+    std::optional<File> file; //... if not set than console
     // TODO: later add format and more rotation rotation options (time, target location, target file pattern)
 };
+
+inline void to_json(nlohmann::json &j, const LogConfig::File &fc)
+{
+    j = nlohmann::json{{"name", fc.name}};
+    if (fc.rotationSize)
+        j["rotationSize"] = *fc.rotationSize;
+}
+inline void from_json(const nlohmann::json &j, LogConfig::File &fc)
+{
+    j.at("name").get_to(fc.name);
+    if (j.contains("rotationSize"))
+        j.at("rotationSize").get_to(*fc.rotationSize);
+}
+
+inline void to_json(nlohmann::json &j, const LogConfig &lc)
+{
+    j = nlohmann::json{{"level", lc.level}};
+    if (lc.file)
+        j["file"] = *lc.file;
+}
+inline void from_json(const nlohmann::json &j, LogConfig &lc)
+{
+    if (j.contains("level"))
+        j.at("level").get_to(lc.level);
+    if (j.contains("file"))
+        j.at("file").get_to(*lc.file);
+}
 
 inline void initLogger(const LogConfig &config = {})
 {

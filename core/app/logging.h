@@ -32,12 +32,12 @@ namespace attrs = boost::log::attributes;
 
 ENUM_CLASS(LogLevel, DEBUG, INFO, WARN, ERROR)
 
-NLOHMANN_JSON_SERIALIZE_ENUM(LogLevel, {
-                                           {LogLevel::DEBUG, "debug"},
-                                           {LogLevel::INFO, "info"},
-                                           {LogLevel::WARN, "warn"},
-                                           {LogLevel::ERROR, "error"},
-                                       })
+DEFINE_CONFIG_ENUM(LogLevel, {
+                                 {LogLevel::DEBUG, "debug"},
+                                 {LogLevel::INFO, "info"},
+                                 {LogLevel::WARN, "warn"},
+                                 {LogLevel::ERROR, "error"},
+                             })
 
 BOOST_LOG_ATTRIBUTE_KEYWORD(loglevel, "Severity", LogLevel)
 

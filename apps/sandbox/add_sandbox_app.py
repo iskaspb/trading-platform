@@ -2,6 +2,7 @@
 
 import os
 import argparse
+import json
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -11,7 +12,7 @@ def createCmake(appName):
 app(
     {appName} EXCLUDE_FROM_ALL SRC ${{SRC}}
     #COMPILER_OPTIONS ...
-    #LINK_OPTIONS ${{Boost_LIBRARIES}} ...
+    LINK_OPTIONS ${{Boost_LIBRARIES}} nlohmann_json::nlohmann_json #...
 )
 """
     with open(f"{appName}/CMakeLists.txt", "w") as f:
@@ -19,15 +20,29 @@ app(
 
 
 def createMain(appName):
-    content = f"""#include <iostream>
+    content = f"""#include <app/init.h>
 
-int main() {{
-    std::cout << "Hello, {appName}!" << std::endl;
-    return 0;
+struct AppConfig
+{{
+    app::LogConfig log;
+    nlohmann::json other;
+}};
+DEFINE_CONFIG(AppConfig, log, other);
+
+int main(int argc, char *argv[])
+{{
+    const auto config = app::init<AppConfig>(argc, argv);
+    //...add your code here
 }}
 """
     with open(f"{appName}/main.cpp", "w") as f:
         f.write(content)
+
+def createConfig(appName):
+    config = {"log" : {"level" : "debug"}, "other" : {"param1" : "value1", "param2" : "value2"}}
+    with open(f"{appName}/{appName}.json", "w") as f:
+        f.write(json.dumps(config, indent=4))
+
 
 def touch(filename):
     with open(filename, 'a'):
@@ -54,6 +69,7 @@ def main():
     os.mkdir(appName)
     createCmake(appName)
     createMain(appName)
+    createConfig(appName)
     touch(f"{appName}/CMakeLists.txt")
     print(f"Added sandbox app in folder {appName}")
 

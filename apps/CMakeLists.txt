@@ -37,3 +37,4 @@ endfunction()
 
 add_subdirectory(md)
 add_subdirectory(sandbox)
+add_subdirectory(examples)

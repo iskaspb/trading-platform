@@ -3,7 +3,7 @@
 This folder contains various applications of the trading platform:
 1. Market data capture apps for popular exchanges (Binance, Deribit, Okex, Huobi, ...);
 2. Feeder - diagnostic and test tool to check market data and build order book;
-3. Example trading strategies
+3. Example apps
 4. ...
 5. Sandbox area
 

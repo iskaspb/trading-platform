@@ -33,6 +33,22 @@ function(app APP_NAME)
     if(NOT ARG_EXCLUDE_FROM_ALL)
         install(TARGETS ${APP_NAME} RUNTIME DESTINATION ${TARGET_BIN_DIR})
     endif()
+
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/config")
+        get_filename_component(APP_FOLDER ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+
+        if(NOT TARGET copy_${APP_FOLDER}_config)
+            message(STATUS "Found configuration in folder ${APP_FOLDER}/config")
+            add_custom_target(copy_${APP_FOLDER}_config
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_CURRENT_SOURCE_DIR}/config
+                ${CMAKE_BINARY_DIR}/config/${APP_FOLDER}
+                COMMENT "Copying config files ${APP_FOLDER}/config -> build/config/${APP_FOLDER}"
+            )
+        endif()
+
+        add_dependencies(${APP_NAME} copy_${APP_FOLDER}_config)
+    endif()
 endfunction()
 
 add_subdirectory(md)

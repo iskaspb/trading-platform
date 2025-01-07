@@ -6,11 +6,11 @@
 
 namespace app
 {
-template <typename ConfigT> inline ConfigT init(int argc, char *argv[], const std::string &overrideAppName = {})
+namespace impl
+{
+template <typename ConfigT> inline ConfigT init(const ConfigLocation &loc)
 {
     using json = nlohmann::json;
-
-    const auto loc = locateConfig(argc, argv, overrideAppName);
 
     std::string strConfig;
     {
@@ -29,5 +29,22 @@ template <typename ConfigT> inline ConfigT init(int argc, char *argv[], const st
     app::initLogger(config.log);
     LOG_DEBUG(loc.appName << " started with " << loc << " : " << strConfig);
     return config;
+}
+} // namespace impl
+
+template <typename ConfigT> inline ConfigT init(int argc, char *argv[], const std::string &overrideAppName = {})
+{
+    return impl::init<ConfigT>(locateConfig(argc, argv, overrideAppName));
+}
+
+template <typename ConfigT> inline ConfigT init(const std::string &exePath, const std::string &overrideAppName = {})
+{
+    return impl::init<ConfigT>(locateConfig(exePath, overrideAppName));
+}
+
+inline void init(const LogConfig &logConfig = {})
+{
+    app::initLogger(logConfig);
+    LOG_DEBUG("Application has started");
 }
 } // namespace app

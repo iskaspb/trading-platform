@@ -1,0 +1,13 @@
+{
+    "name": "app_example",
+    "log": {
+        "level": "debug"
+    },
+    "strategy": {
+        "name": "mm_binance",
+        "params": {
+            "p1": "v1",
+            "p2": "v2"
+        }
+    }
+}

@@ -68,7 +68,15 @@ inline bool locateConfigImpl(const path &appPath, ConfigLocation &loc)
         const auto configDir = std::getenv(envConfigDir);
         if (configDir)
         {
-            const path configFile = path(configDir) / appConfigName;
+            path configFile = path(configDir) / appConfigName;
+            if (std::filesystem::exists(configFile))
+            {
+                loc.locType = ConfigLocation::ENV_CONFIG_DIR;
+                loc.path = configFile.string();
+                return true;
+            }
+
+            configFile = path(configDir) / loc.appName / appConfigName;
             if (std::filesystem::exists(configFile))
             {
                 loc.locType = ConfigLocation::ENV_CONFIG_DIR;
@@ -122,7 +130,8 @@ inline ConfigLocation locateConfig(int argc, char *argv[], const std::string &ov
         return loc;
 
     std::cout << "Config file not found in the following locations : --config, $" << envConfigPath << ", "
-              << appPath.parent_path() << ", $" << envConfigDir << '/' << loc.appName << ".json" << std::endl;
+              << appPath.parent_path() << ", $" << envConfigDir << "/[" << loc.appName << "]/" << loc.appName << ".json"
+              << std::endl;
     ::exit(1);
 }
 
@@ -138,7 +147,8 @@ inline ConfigLocation locateConfig(const std::string &exePath, const std::string
         return loc;
 
     std::cout << "Config file not found in the following locations : $" << envConfigPath << ", "
-              << appPath.parent_path() << ", $" << envConfigDir << '/' << loc.appName << ".json" << std::endl;
+              << appPath.parent_path() << ", $" << envConfigDir << "/[" << loc.appName << "]/" << loc.appName << ".json"
+              << std::endl;
     ::exit(1);
 }
 

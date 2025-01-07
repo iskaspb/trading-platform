@@ -16,7 +16,7 @@ This is a collection of facilities for internal integration/binding. There are a
 Normally these essential ways of code binding is enough on component level. However, on a system level the component integration with basic tools might become a burden. Any real-world application eventually reaches the point when internal component connectivity becomes too complex and the cost of adding a new feature is more expensive than the implementation of its function. There is no good answer for this problem because this situation happens when the initial assumptions become invalid.
 
 We will use two design patterns that help solving this problem:
-1. "Dynamic interface" or "multi std::function". It's also known by other names : Delegate, [multilambda](https://www.scs.stanford.edu/~dm/blog/param-pack.html#multilambda). In this platform we use name "Gate" (also "GateRef" for its lightweight counterpart);
+1. "Dynamic interface" or "multi std::function". It's also known by other names : Delegate, [multilambda](https://www.scs.stanford.edu/~dm/blog/param-pack.html#multilambda). In this platform we use name "DGate" (also "DGateRef" for its lightweight counterpart);
 2. "Assembly/Relay". It's also known as "Pipeline" or "Workflow". This pattern is a deep review or an extension of a popular design pattern [Transaction Script](https://martinfowler.comb/eaaCatalog/transactionScript.html) described by Martin Fowler (unfortunately, every time I see a description of TS on the Web I find that ppl don't understand it and at best just repeat Martin Fowler book).
 
 ## Logging

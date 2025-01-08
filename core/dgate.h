@@ -1,11 +1,24 @@
 #pragma once
+#include <functional>
 
-template <typename... Callable> struct DGate : Callable...
+template <typename... Callables> struct DGate : Callables...
 {
-    using Callable::operator()...;
-    constexpr DGate(Callable... c) : Callable(std::move(c))...
+    using Callables::operator()...;
+    DGate() = default;
+    constexpr DGate(Callables... c) : Callables(std::move(c))...
     {
     }
+    template <typename Callable> constexpr DGate(Callable c) : Callables(c)...
+    {
+    }
+};
+
+template <typename... Callables> DGate(Callables...) -> DGate<Callables...>;
+template <typename Callable> DGate(Callable) -> DGate<Callable>;
+
+template <typename... Events> struct EventsDGate
+{
+    using Type = DGate<std::function<void(Events)>...>;
 };
 
 template <typename Callable> class DGateRef

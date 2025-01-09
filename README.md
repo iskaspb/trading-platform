@@ -1,3 +1,9 @@
+## Getting the code
+```
+git clone git@github.com:iskaspb/trading-platform.git && cd trading-platform
+git submodule update --init --recursive
+```
+
 ## Prepare dev env
 You may choose to build and run the platform and associated apps natively on your machine or you can use docker container.
 Docker path is less cumbersome in terms of dependency management, however it provides less integration with your host dev env.

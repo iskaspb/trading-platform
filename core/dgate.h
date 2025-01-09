@@ -24,10 +24,10 @@ template <typename... Events> struct EventsDGate
 template <typename Callable> class DGateRef
 {
   public:
-    DGateRef(Callable &c) : ref_(c)
+    constexpr DGateRef(Callable &c) noexcept : ref_(c)
     {
     }
-    DGateRef(const std::reference_wrapper<Callable> &ref) : ref_(ref)
+    constexpr DGateRef(const std::reference_wrapper<Callable> &ref) noexcept : ref_(ref)
     {
     }
 

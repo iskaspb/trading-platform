@@ -1,6 +1,8 @@
 #include <catch2/catch_all.hpp>
 #include <relay.h>
 
+#include <iostream>
+
 using namespace impl;
 
 struct TestTraits
@@ -13,6 +15,11 @@ struct TestTraits
 
 template <typename TraitsT> struct Node1
 {
+    Node1(const std::string &name = "Node1") : name(name)
+    {
+    }
+
+    std::string name;
 };
 template <typename TraitsT> struct Node2
 {
@@ -23,14 +30,20 @@ template <typename TraitsT> struct Node2
             value = 123
         };
     };
+
+    Node2() : name("Node2")
+    {
+    }
+
+    std::string name;
 };
 
 using EmptyAssembly = Assembly<TestTraits>;
-struct Node1Assembly : Assembly<Node1Assembly, Node1>, TestTraits
+struct Assembly1 : Assembly<Assembly1, Node1>, TestTraits
 {
 };
 
-struct Node12Assembly : Assembly<Node1Assembly, Node1, Node2>, TestTraits
+struct Assembly12 : Assembly<Assembly1, Node1, Node2>, TestTraits
 {
 };
 
@@ -39,18 +52,30 @@ TEST_CASE("Assembly", "[core]")
     SECTION("Empty assembly")
     {
         static_assert(EmptyAssembly::Traits::value == 42);
-        static_assert(metal::size<EmptyAssembly::Nodes::List>::value == 0);
+        static_assert(metal::size<EmptyAssembly::Nodes>::value == 0);
     }
     SECTION("Single node assembly without context")
     {
-        static_assert(Node1Assembly::Traits::value == 42);
-        static_assert(metal::size<Node1Assembly::Nodes::List>::value == 1);
+        static_assert(Assembly1::Traits::value == 42);
+        static_assert(metal::size<Assembly1::Nodes>::value == 1);
     }
     SECTION("Assembly with context")
     {
-        static_assert(Node1Assembly::Traits::value == 42);
-        static_assert(metal::size<Node12Assembly::Nodes::List>::value == 2);
-        static_assert(Node12Assembly::Nodes::Context::value == 123);
+        static_assert(Assembly1::Traits::value == 42);
+        static_assert(metal::size<Assembly12::Nodes>::value == 2);
+        static_assert(Assembly12::Context::value == 123);
+    }
+    SECTION("Construct assembly without parameter")
+    {
+        Assembly12::Holder holder;
+        REQUIRE(holder.get<0>().name == "Node1");
+        REQUIRE(holder.get<1>().name == "Node2");
+    }
+    SECTION("Construct assembly with parameter")
+    {
+        Assembly12::Holder holder("OtherNameForNode1");
+        REQUIRE(holder.get<0>().name == "OtherNameForNode1");
+        REQUIRE(holder.get<1>().name == "Node2");
     }
 }
 

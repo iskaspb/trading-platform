@@ -38,6 +38,8 @@ find_package(nlohmann_json 3.11 REQUIRED)
 # rapid json
 find_package(RapidJSON)
 
+# metal MPL library is header only, so no need to link anything
+include_directories(${CMAKE_SOURCE_DIR}/external/metal/include/)
 
 add_subdirectory(apps)
 add_subdirectory(tests)

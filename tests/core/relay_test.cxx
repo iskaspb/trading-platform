@@ -1,94 +1,85 @@
 #include <catch2/catch_all.hpp>
 #include <relay.h>
 
-#include <iostream>
-
-using namespace impl;
-
-struct TestTraits
+namespace core
 {
-    enum
-    {
-        value = 42
-    };
-};
-
-template <typename TraitsT> struct Node1
-{
-    Node1(const std::string &name = "Node1") : name_(name)
-    {
-    }
-    const std::string &name() const
-    {
-        return name_;
-    }
-
-  private:
-    std::string name_;
-};
-template <typename TraitsT> struct Node2
+template <typename Traits> struct ResponseTerminator
 {
     struct ContextMixin
     {
-        enum
-        {
-            value = 123
-        };
+        Traits::Acceptor *acceptor{};
     };
 
-    const std::string &name() const
+    void onRequest(Traits::Acceptor &a)
     {
-        return name_;
+        core::ctx(this).acceptor = &a;
     }
 
-  private:
-    std::string name_{"Node2"};
+    template <typename... Args> void onResponse(Args &&...args)
+    {
+        assert(core::ctx(this).acceptor && "Set acceptor before responding");
+        core::ctx(this).acceptor->accept(std::forward<Args>(args)...);
+    }
+};
+} // namespace core
+
+using core::ctx;
+
+struct Message
+{
+    std::string data;
+
+    friend std::ostream &operator<<(std::ostream &os, const Message &m)
+    {
+        os << m.data;
+        return os;
+    }
 };
 
-using EmptyAssembly = Assembly<TestTraits>;
-struct Assembly1 : Assembly<Assembly1, Node1>, TestTraits
+template <typename Traits> struct Echo
 {
+    using Relay = typename core::Relay<Traits>;
+
+    void onRequest(const Message &msg)
+    {
+        std::string reply(msg.data);
+        std::reverse(reply.begin(), reply.end());
+        Relay::passResponse(this, Message{reply});
+    }
 };
 
-struct Assembly12 : Assembly<Assembly1, Node1, Node2>, TestTraits
+struct Acceptor
 {
+    std::vector<Message> messages;
+
+    void accept(const Message &msg)
+    {
+        messages.push_back(msg);
+    }
+
+    void accept(int, int)
+    {
+    }
 };
 
-TEST_CASE("Assembly", "[core]")
+struct TestAssembly : core::Assembly<TestAssembly, core::ResponseTerminator, Echo>
 {
-    SECTION("Empty assembly")
-    {
-        static_assert(EmptyAssembly::Traits::value == 42);
-        static_assert(metal::size<EmptyAssembly::Nodes>::value == 0);
-    }
-    SECTION("Single node assembly without context")
-    {
-        static_assert(Assembly1::Traits::value == 42);
-        static_assert(metal::size<Assembly1::Nodes>::value == 1);
-    }
-    SECTION("Assembly with context")
-    {
-        static_assert(Assembly1::Traits::value == 42);
-        static_assert(metal::size<Assembly12::Nodes>::value == 2);
-        static_assert(Assembly12::Context::value == 123);
-    }
-    SECTION("Construct assembly without parameter")
-    {
-        Assembly12::Holder holder;
-        REQUIRE(holder.get<0>().name() == "Node1");
-        REQUIRE(holder.get<1>().name() == "Node2");
-    }
-    SECTION("Construct assembly with parameter")
-    {
-        Assembly12::Holder holder("OtherNameForNode1");
-        REQUIRE(holder.get<0>().name() == "OtherNameForNode1");
-        REQUIRE(holder.get<1>().name() == "Node2");
-    }
-}
+    using Acceptor = ::Acceptor;
+};
 
 TEST_CASE("Relay", "[core]")
 {
-    SECTION("Event echo")
+    core::Relay<TestAssembly> relay;
+    Acceptor acceptor;
+    relay.request(acceptor);
+
+    SECTION("Echo event acceptor")
     {
+        relay.request(Message{"hello"});
+        relay.request(Message{"world"});
+
+        REQUIRE(acceptor.messages.size() == 2);
+        CHECK(acceptor.messages[0].data == "olleh");
+        CHECK(acceptor.messages[1].data == "dlrow");
     }
 }

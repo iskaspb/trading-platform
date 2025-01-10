@@ -1,5 +1,5 @@
+#include <assembly/relay.h>
 #include <catch2/catch_all.hpp>
-#include <relay.h>
 
 namespace core
 {

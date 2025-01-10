@@ -1,4 +1,4 @@
-#include <assembly.h>
+#include <assembly/assembly.h>
 #include <catch2/catch_all.hpp>
 
 using namespace core;

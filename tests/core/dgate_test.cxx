@@ -1,5 +1,5 @@
 #include <catch2/catch_all.hpp>
-#include <dgate.h>
+#include <util/dgate.h>
 
 using namespace core;
 

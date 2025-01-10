@@ -1,6 +1,8 @@
 #pragma once
 #include <functional>
 
+namespace core
+{
 template <typename... Callables> struct DGate : Callables...
 {
     using Callables::operator()...;
@@ -39,3 +41,4 @@ template <typename Callable> class DGateRef
   private:
     const std::reference_wrapper<Callable> ref_;
 };
+} // namespace core

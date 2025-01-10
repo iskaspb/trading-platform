@@ -1,6 +1,8 @@
 #include <catch2/catch_all.hpp>
 #include <dgate.h>
 
+using namespace core;
+
 struct Functor
 {
     int operator()(int i)

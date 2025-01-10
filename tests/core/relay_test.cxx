@@ -15,11 +15,16 @@ struct TestTraits
 
 template <typename TraitsT> struct Node1
 {
-    Node1(const std::string &name = "Node1") : name(name)
+    Node1(const std::string &name = "Node1") : name_(name)
     {
     }
+    const std::string &name() const
+    {
+        return name_;
+    }
 
-    std::string name;
+  private:
+    std::string name_;
 };
 template <typename TraitsT> struct Node2
 {
@@ -31,11 +36,13 @@ template <typename TraitsT> struct Node2
         };
     };
 
-    Node2() : name("Node2")
+    const std::string &name() const
     {
+        return name_;
     }
 
-    std::string name;
+  private:
+    std::string name_{"Node2"};
 };
 
 using EmptyAssembly = Assembly<TestTraits>;
@@ -68,14 +75,14 @@ TEST_CASE("Assembly", "[core]")
     SECTION("Construct assembly without parameter")
     {
         Assembly12::Holder holder;
-        REQUIRE(holder.get<0>().name == "Node1");
-        REQUIRE(holder.get<1>().name == "Node2");
+        REQUIRE(holder.get<0>().name() == "Node1");
+        REQUIRE(holder.get<1>().name() == "Node2");
     }
     SECTION("Construct assembly with parameter")
     {
         Assembly12::Holder holder("OtherNameForNode1");
-        REQUIRE(holder.get<0>().name == "OtherNameForNode1");
-        REQUIRE(holder.get<1>().name == "Node2");
+        REQUIRE(holder.get<0>().name() == "OtherNameForNode1");
+        REQUIRE(holder.get<1>().name() == "Node2");
     }
 }
 

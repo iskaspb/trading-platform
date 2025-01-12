@@ -37,69 +37,36 @@ concept hasContext = requires()
 };
 } // namespace concepts
 
-/* This code is simpler than manually written context mixing collector, but it doesn't work due to circular dependency
-
 template <typename T> using hasContext = metal::number<concepts::hasContext<T>>;
 
 template <typename List> struct ContextHolder;
-template <typename... Ts> struct ContextHolder<metal::list<Ts...>> : Ts::ContextMixin...
+template <typename... Ts> struct ContextHolder<metal::list<Ts...>> : Constructible<typename Ts::ContextMixin>...
 {
+    template <typename... Args>
+    ContextHolder(const Args &...args) : Constructible<typename Ts::ContextMixin>(args...)...
+    {
+    }
 };
 
-template <typename Nodes> struct Collector
+template <typename Nodes> struct ContextCollector
 {
     using ContextNodes = metal::copy_if<Nodes, metal::lambda<hasContext>>;
-    using Context = ContextHolder<ContextNodes>;
+    using Mixins = ContextHolder<ContextNodes>;
 };
 
-The intended use:
-AssemblyHolder inherits from Collector<Nodes>::Context instead of MixinCollector<...
-
-TODO: review it after some time and try to make it work
-*/
-
-template <typename... Nodes> struct ContextMixins;
-
-template <typename Node, typename... Rest>
-requires(concepts::hasContext<Node>) struct ContextMixins<Node, Rest...>
-    : Constructible<typename Node::ContextMixin>, ContextMixins<Rest...>
+//...You can use this MixinCollector to collect mixins from Nodes.
+//...Currently, it collects only ContextMixins, but you can change the collector to collect any other mixins
+template <typename Nodes> struct MixinCollector
 {
-    using Mixin = Constructible<typename Node::ContextMixin>;
-    using RestMixins = ContextMixins<Rest...>;
-
-    template <typename... Args> ContextMixins(const Args &...args) : Mixin(args...), RestMixins(args...)
-    {
-    }
-};
-
-template <typename Node, typename... Rest>
-requires(!concepts::hasContext<Node>) struct ContextMixins<Node, Rest...> : ContextMixins<Rest...>
-{
-    using RestMixins = ContextMixins<Rest...>;
-
-    template <typename... Args> ContextMixins(const Args &...args) : RestMixins(args...)
-    {
-    }
-};
-
-template <> struct ContextMixins<>
-{
-    template <typename... Args> ContextMixins(const Args &...)
-    {
-    }
-};
-
-template <typename AssemblyHolderT> struct MixinCollector;
-template <template <typename...> class AssemblyHolderT, typename... Nodes>
-struct MixinCollector<AssemblyHolderT<metal::list<Nodes...>>>
-{
-    template <template <typename...> class NodesToMixins> using Mixins = NodesToMixins<Nodes...>;
+    template <template <typename> class NodesToMixins> using Mixins = NodesToMixins<Nodes>::Mixins;
 };
 
 template <typename Nodes>
-struct AssemblyHolder : MixinCollector<AssemblyHolder<Nodes>>::template Mixins<ContextMixins>, NodeHolder<Nodes>
+struct AssemblyHolder : MixinCollector<Nodes>::template Mixins<ContextCollector>, NodeHolder<Nodes>
 {
-    using Context = typename MixinCollector<AssemblyHolder>::template Mixins<ContextMixins>;
+    //...to understand this you can read :
+    //..."MixinCollector gets Mixins from Nodes using ContextCollector" - or "Collect ContextMixins from Nodes"
+    using Context = typename MixinCollector<Nodes>::template Mixins<ContextCollector>;
 
     template <typename... Args> AssemblyHolder(const Args &...args) : Context(args...), NodeHolder<Nodes>(args...)
     {
@@ -133,6 +100,7 @@ inline const AssemblyT::Holder &getAssemblyHolder(const Node<AssemblyT> *node)
 {
     return static_cast<const AssemblyT::Holder &>(*node);
 }
+
 } // namespace impl
 
 template <typename TraitsT, template <typename> class... NodesT> struct Assembly

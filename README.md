@@ -1,3 +1,14 @@
+## Why you may need this platform
+This platform is a solution for "C++ for a startup" problem. In the modern world of softare development C++ is a dinosour that literally doesn't allow you to do anything (and complexity of the language is at the end of the list of the issues). Here is a rather old summary that [explains what is wrong with C++](https://www.reddit.com/r/programming/comments/3z60z3/comment/cyjpvip).
+
+### What are other options?
+TODO: add review of popular frameworks and library collections:
+1. Standard Library
+2. Boost
+3. POCO
+4. Folly
+5. ...
+
 ## Getting the code
 ```
 git clone git@github.com:iskaspb/trading-platform.git && cd trading-platform

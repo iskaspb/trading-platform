@@ -20,10 +20,10 @@ template <typename Node> struct Constructible : Node
     }
 };
 
-template <typename Nodes> struct NodeHolder;
-template <typename... Nodes> struct NodeHolder<metal::list<Nodes...>> : Constructible<Nodes>...
+template <typename Nodes> struct ContructibleNodes;
+template <typename... Nodes> struct ContructibleNodes<metal::list<Nodes...>> : Constructible<Nodes>...
 {
-    template <typename... Args> NodeHolder(const Args &...args) : Constructible<Nodes>(args...)...
+    template <typename... Args> ContructibleNodes(const Args &...args) : Constructible<Nodes>(args...)...
     {
     }
 };
@@ -51,24 +51,14 @@ template <typename... Ts> struct ContextHolder<metal::list<Ts...>> : Constructib
 template <typename Nodes> struct ContextCollector
 {
     using ContextNodes = metal::copy_if<Nodes, metal::lambda<hasContext>>;
-    using Mixins = ContextHolder<ContextNodes>;
+    using Context = ContextHolder<ContextNodes>;
 };
 
-//...You can use this MixinCollector to collect mixins from Nodes.
-//...Currently, it collects only ContextMixins, but you can change the collector to collect any other mixins
-template <typename Nodes> struct MixinCollector
+template <typename Nodes> struct Assembly : ContextCollector<Nodes>::Context, ContructibleNodes<Nodes>
 {
-    template <template <typename> class NodesToMixins> using Mixins = NodesToMixins<Nodes>::Mixins;
-};
+    using Context = typename ContextCollector<Nodes>::Context;
 
-template <typename Nodes>
-struct AssemblyHolder : MixinCollector<Nodes>::template Mixins<ContextCollector>, NodeHolder<Nodes>
-{
-    //...to understand this you can read :
-    //..."MixinCollector gets Mixins from Nodes using ContextCollector" - or "Collect ContextMixins from Nodes"
-    using Context = typename MixinCollector<Nodes>::template Mixins<ContextCollector>;
-
-    template <typename... Args> AssemblyHolder(const Args &...args) : Context(args...), NodeHolder<Nodes>(args...)
+    template <typename... Args> Assembly(const Args &...args) : Context(args...), ContructibleNodes<Nodes>(args...)
     {
     }
 
@@ -87,18 +77,17 @@ struct AssemblyHolder : MixinCollector<Nodes>::template Mixins<ContextCollector>
     }
 };
 
-template <typename NodeOrCtxMixin> auto &getAssemblyHolder(NodeOrCtxMixin *node_or_mixin);
+template <typename NodeOrCtxMixin> auto &getAssembly(NodeOrCtxMixin *node_or_mixin);
 
-template <template <typename> class Node, typename AssemblyT>
-inline AssemblyT::Holder &getAssemblyHolder(Node<AssemblyT> *node)
+template <template <typename> class Node, typename AssemblyT> inline AssemblyT::Body &getAssembly(Node<AssemblyT> *node)
 {
-    return static_cast<AssemblyT::Holder &>(*node);
+    return static_cast<AssemblyT::Body &>(*node);
 }
 
 template <template <typename> class Node, typename AssemblyT>
-inline const AssemblyT::Holder &getAssemblyHolder(const Node<AssemblyT> *node)
+inline const AssemblyT::Body &getAssembly(const Node<AssemblyT> *node)
 {
-    return static_cast<const AssemblyT::Holder &>(*node);
+    return static_cast<const AssemblyT::Body &>(*node);
 }
 
 } // namespace impl
@@ -108,11 +97,11 @@ template <typename TraitsT, template <typename> class... NodesT> struct Assembly
     using Traits = TraitsT;
     using Nodes = metal::list<NodesT<Traits>...>;
     static constexpr size_t size = metal::size<Nodes>::value;
-    using Holder = impl::AssemblyHolder<Nodes>;
+    using Body = impl::Assembly<Nodes>;
 };
 
 template <typename NodeOrCtxMixin> inline auto &ctx(NodeOrCtxMixin *node_or_mixin)
 {
-    return impl::getAssemblyHolder(node_or_mixin).ctx();
+    return impl::getAssembly(node_or_mixin).ctx();
 }
 } // namespace core

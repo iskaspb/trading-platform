@@ -68,18 +68,18 @@ TEST_CASE("Assembly", "[core]")
     {
         static_assert(Assembly1::Traits::value == 42);
         static_assert(metal::size<Assembly12::Nodes>::value == 2);
-        static_assert(Assembly12::Holder::Context::value == 123);
+        static_assert(Assembly12::Body::Context::value == 123);
     }
     SECTION("Construct assembly without parameter")
     {
-        Assembly12::Holder holder;
-        REQUIRE(holder.get<0>().name() == "Node1");
-        REQUIRE(holder.get<1>().name() == "Node2");
+        Assembly12::Body assembly;
+        REQUIRE(assembly.get<0>().name() == "Node1");
+        REQUIRE(assembly.get<1>().name() == "Node2");
     }
     SECTION("Construct assembly with parameter")
     {
-        Assembly12::Holder holder("OtherNameForNode1");
-        REQUIRE(holder.get<0>().name() == "OtherNameForNode1");
-        REQUIRE(holder.get<1>().name() == "Node2");
+        Assembly12::Body assembly("OtherNameForNode1");
+        REQUIRE(assembly.get<0>().name() == "OtherNameForNode1");
+        REQUIRE(assembly.get<1>().name() == "Node2");
     }
 }

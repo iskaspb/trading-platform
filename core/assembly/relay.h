@@ -38,23 +38,23 @@ using hasOnResponseCond = metal::bind<metal::lambda<hasOnResponse>, metal::_1, m
 template <typename AssemblyT> struct Relay
 {
     using Assembly = AssemblyT;
-    using Context = typename Assembly::Holder::Context;
+    using Context = typename Assembly::Body::Context;
     using Nodes = typename Assembly::Nodes;
     using RNodes = metal::reverse<Nodes>;
     static_assert(std::is_same_v<typename Assembly::Traits, Assembly>, "Traits must be derived from Assembly<...>");
 
     Relay() = default;
-    template <typename... Args> Relay(Args &&...args) : holder_(std::forward<Args>(args)...)
+    template <typename... Args> Relay(Args &&...args) : assembly_(std::forward<Args>(args)...)
     {
     }
 
     Context &ctx() noexcept
     {
-        return holder_.ctx();
+        return assembly_.ctx();
     }
     const Context &ctx() const noexcept
     {
-        return holder_.ctx();
+        return assembly_.ctx();
     }
 
     template <typename... Msgs> void request(Msgs &&...msgs)
@@ -63,7 +63,7 @@ template <typename AssemblyT> struct Relay
         static_assert(NodePos::value < Assembly::size, "No node found with onRequest(Msgs...)");
         using Node = metal::at<Nodes, NodePos>;
 
-        static_cast<Node *>(&holder_)->onRequest(std::forward<Msgs>(msgs)...);
+        static_cast<Node *>(&assembly_)->onRequest(std::forward<Msgs>(msgs)...);
     }
     template <typename... Msgs> void respond(Msgs &&...msgs)
     {
@@ -71,7 +71,7 @@ template <typename AssemblyT> struct Relay
         static_assert(NodePos::value < Assembly::size, "No node found with onResponse(Msgs...)");
         using Node = metal::at<RNodes, NodePos>;
 
-        static_cast<Node *>(&holder_)->onResponse(std::forward<Msgs>(msgs)...);
+        static_cast<Node *>(&assembly_)->onResponse(std::forward<Msgs>(msgs)...);
     }
 
     template <typename Node, typename... Msgs> static void passRequest(Node *node, Msgs &&...msgs)
@@ -83,7 +83,7 @@ template <typename AssemblyT> struct Relay
                       "No next node found with onRequest(Msgs...)");
         using NextNode = metal::at<RemainingNodes, NodePos>;
 
-        static_cast<NextNode *>(static_cast<AssemblyHolder *>(node))->onRequest(std::forward<Msgs>(msgs)...);
+        static_cast<NextNode *>(static_cast<AssemblyBody *>(node))->onRequest(std::forward<Msgs>(msgs)...);
     }
 
     template <typename Node, typename... Msgs> static void passResponse(Node *node, Msgs &&...msgs)
@@ -95,11 +95,11 @@ template <typename AssemblyT> struct Relay
                       "No next node found with onResponse(Msgs...)");
         using NextNode = metal::at<RemainingNodes, NodePos>;
 
-        static_cast<NextNode *>(static_cast<AssemblyHolder *>(node))->onResponse(std::forward<Msgs>(msgs)...);
+        static_cast<NextNode *>(static_cast<AssemblyBody *>(node))->onResponse(std::forward<Msgs>(msgs)...);
     }
 
   private:
-    using AssemblyHolder = typename Assembly::Holder;
-    AssemblyHolder holder_;
+    using AssemblyBody = typename Assembly::Body;
+    AssemblyBody assembly_;
 };
 } // namespace core

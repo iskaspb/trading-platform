@@ -135,7 +135,12 @@ The location of a config file `appName.json` is searched in the following order:
     The config file is searched in the folder `/path/to/config/mm_binance.json`
 
 ## Networking and I/O
-We start by using public I/O and network protocol implementations (TCP, HTTP1/2, WebSocket...), e.g. [boost::asio](https://www.boost.org/doc/libs/1_84_0/doc/html/boost_asio.html), [POCO::Net](https://docs.pocoproject.org/current/Poco.Net.html), [libevent](https://libevent.org/)  etc. Later we add our own (possibly higher performance) implementations.
+We start by using public I/O and network protocol implementations (HTTP, WebSocket, ...):
+1. HTTP/1 and WebSocket : [boost::beast](https://www.boost.org/doc/libs/1_87_0/libs/beast/doc/html/index.html)
+2. HTTP/2 : ?
+3. Event demultiplexing [libevent](https://libevent.org/)
+
+TODO: review open source libraries : https://en.cppreference.com/w/cpp/links/libs
 
 ## Utilities
 This is a collection of basic platform utilities, e.g. [ENUM](https://www.scs.stanford.edu/~dm/blog/va-opt.html) macro that simplifies definition of enumerations.

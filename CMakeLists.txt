@@ -25,6 +25,11 @@ enable_testing()
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/core)
 
+find_package(OpenSSL REQUIRED)
+message(STATUS "OpenSSL found: ${OPENSSL_VERSION}")
+include_directories(${OPENSSL_INCLUDE_DIR})
+#    target_link_libraries(your_target_name OpenSSL::SSL OpenSSL::Crypto)
+
 # Current Boost setup depends on auto-linking feature of Boost, which means you don't need to define anything except ${Boost_LIBRARIES} in dependencies
 set(Boost_DEBUG FALSE)
 #set(Boost_USE_STATIC_LIBS ON CACHE INTERNAL "" FORCE) # Review more efficient boost linking when start perf optimization

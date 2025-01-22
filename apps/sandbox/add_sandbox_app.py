@@ -33,14 +33,16 @@ int main(int argc, char *argv[])
 {{
     const auto config = app::init<AppConfig>(argc, argv);
     //...add your code here
+    LOG_INFO("Hello, {appName}!");
 }}
 """
     with open(f"{appName}/main.cpp", "w") as f:
         f.write(content)
 
 def createConfig(appName):
+    os.makedirs(f"{appName}/config", exist_ok=True)
     config = {"log" : {"level" : "debug"}, "other" : {"param1" : "value1", "param2" : "value2"}}
-    with open(f"{appName}/{appName}.json", "w") as f:
+    with open(f"{appName}/config/{appName}.json", "w") as f:
         f.write(json.dumps(config, indent=4))
 
 
@@ -70,7 +72,7 @@ def main():
     createCmake(appName)
     createMain(appName)
     createConfig(appName)
-    touch(f"{appName}/CMakeLists.txt")
+    touch(f"CMakeLists.txt")
     print(f"Added sandbox app in folder {appName}")
 
 

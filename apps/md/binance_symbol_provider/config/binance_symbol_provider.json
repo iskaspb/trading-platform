@@ -1,0 +1,9 @@
+{
+    "log": {
+        "level": "debug"
+    },
+    "symbolProvider": {
+        "store": "binance-symbols.json",
+        "source": "fapi.binance.com"
+    }
+}

@@ -4,6 +4,6 @@
     },
     "symbolProvider": {
         "store": "binance-symbols.json",
-        "source": "fapi.binance.com"
+        "source": "https://fapi.binance.com/fapi/v1/exchangeInfo"
     }
 }

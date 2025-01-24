@@ -3,6 +3,10 @@
 
 TEST_CASE("URL", "[core]")
 {
+    SECTION("URL no schema")
+    {
+        CHECK_THROWS_AS(URL("www.example.com"), std::logic_error);
+    }
     SECTION("HTTPS URL with explicit port")
     {
         URL url("https://www.example.com:8080/path/to/resource?query=123#fragment");
@@ -22,8 +26,15 @@ TEST_CASE("URL", "[core]")
         CHECK(url.scheme() == "wss");
         CHECK(url.host() == "www.example.com");
         CHECK(url.port() == "443");
-        CHECK(url.path().empty());
+        CHECK(url.path() == "/");
         CHECK(url.query().empty());
         CHECK(url.fragment().empty());
+    }
+
+    SECTION("URL target")
+    {
+        CHECK(URL("https://www.example.com/path/to/resource?query=123#fragment").target() ==
+              "/path/to/resource?query=123#fragment");
+        CHECK(URL("wss://www.example.com").target() == "/");
     }
 }

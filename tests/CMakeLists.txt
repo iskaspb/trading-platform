@@ -43,6 +43,7 @@ function(testSuiteImpl TEST_SUITE_NAME)
         separate_arguments(ARG_LINK_OPTIONS)
         target_link_libraries(${TEST_SUITE_NAME} ${ARG_LINK_OPTIONS})
     endif()
+    target_link_libraries(${TEST_SUITE_NAME} ${Boost_LIBRARIES})
 endfunction()
 
 function(c2test TEST_SUITE_NAME)

@@ -34,7 +34,7 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 set(Boost_DEBUG FALSE)
 #set(Boost_USE_STATIC_LIBS ON CACHE INTERNAL "" FORCE) # Review more efficient boost linking when start perf optimization
 set(Boost_USE_RELEASE_LIBS ON CACHE INTERNAL "" FORCE)
-find_package(Boost REQUIRED COMPONENTS filesystem iostreams program_options regex log_setup log)
+find_package(Boost REQUIRED COMPONENTS filesystem iostreams program_options regex log_setup log url)
 message(STATUS "Found Boost ${Boost_VERSION}, includes: ${Boost_INCLUDE_DIRS}, libs: ${Boost_LIBRARIES}")
 
 # nlohmann json

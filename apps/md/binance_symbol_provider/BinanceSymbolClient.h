@@ -2,6 +2,8 @@
 #include "SymbolProviderConfig.h"
 
 #include <app/logging.h>
+#include <assembly/relay.h>
+#include <io/HTTPSClient.h>
 
 enum class ServiceCmd
 {
@@ -11,7 +13,9 @@ enum class ServiceCmd
 
 template <typename Traits> struct BinanceSymbolClient
 {
-    template <HasSymbolProviderConfig Config> explicit BinanceSymbolClient(Config &config)
+    template <HasSymbolProviderConfig Config>
+    explicit BinanceSymbolClient(Config &config)
+        : client_(net::make_strand(core::ctx(this).getIO()), URL(config.symbolProvider.source))
     {
         LOG_DEBUG("BinanceSymbolClient gets symbols from " << config.symbolProvider.source);
     }
@@ -28,4 +32,7 @@ template <typename Traits> struct BinanceSymbolClient
             break;
         }
     }
+
+  private:
+    HTTPSClient client_;
 };

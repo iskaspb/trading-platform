@@ -3,7 +3,7 @@
 
 #include <app/logging.h>
 #include <assembly/relay.h>
-#include <io/HTTPSClient.h>
+#include <io/HTTPS.h>
 
 enum class ServiceCmd
 {
@@ -15,7 +15,7 @@ template <typename Traits> struct BinanceSymbolClient
 {
     template <HasSymbolProviderConfig Config>
     explicit BinanceSymbolClient(Config &config)
-        : client_(net::make_strand(core::ctx(this).getIO()), URL(config.symbolProvider.source))
+        : address_(config.symbolProvider.source), client_(net::make_strand(core::ctx(this).getIO()), address_)
     {
         LOG_DEBUG("BinanceSymbolClient gets symbols from " << config.symbolProvider.source);
     }
@@ -24,9 +24,12 @@ template <typename Traits> struct BinanceSymbolClient
     {
         switch (command)
         {
-        case ServiceCmd::Start:
+        case ServiceCmd::Start: {
             LOG_DEBUG("BinanceSymbolClient started");
+            const auto response = client_.send(HTTPS::Get(address_.target()));
+            LOG_DEBUG("Response: code:" << response.code << "\n" << response.body);
             break;
+        }
         case ServiceCmd::Stop:
             LOG_DEBUG("BinanceSymbolClient stopped");
             break;
@@ -34,5 +37,6 @@ template <typename Traits> struct BinanceSymbolClient
     }
 
   private:
-    HTTPSClient client_;
+    URL address_;
+    HTTPS client_;
 };

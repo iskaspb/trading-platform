@@ -1,35 +1,10 @@
-#include <AppConfig.h>
+#include "AppConfig.h"
+#include "AsioService.h"
+#include "BinanceSymbolClient.h"
+#include "FileSymbolStore.h"
 
 #include <app/init.h>
 #include <assembly/relay.h>
-
-template <typename Traits> struct AsioService
-{
-};
-
-enum class ServiceCommand
-{
-    Start,
-    Stop
-};
-
-template <typename Traits> struct BinanceSymbolClient
-{
-    template <HasSymbolProviderConfig Config> explicit BinanceSymbolClient(Config &)
-    {
-    }
-
-    void onRequest(ServiceCommand command)
-    {
-    }
-};
-
-template <typename Traits> struct FileSymbolStore
-{
-    template <HasSymbolProviderConfig Config> explicit FileSymbolStore(Config &)
-    {
-    }
-};
 
 struct Assembly : core::Assembly<Assembly, AsioService, FileSymbolStore, BinanceSymbolClient>
 {
@@ -43,6 +18,10 @@ int main(int argc, char *argv[])
         const auto config = app::init<AppConfig>(argc, argv);
 
         core::Relay<Assembly> relay(config);
+
+        relay.request(ServiceCmd::Start);
+
+        relay.ctx().getIO().run();
     }
     catch (const std::exception &e)
     {

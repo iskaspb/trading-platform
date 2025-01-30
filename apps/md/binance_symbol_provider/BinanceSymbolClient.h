@@ -28,9 +28,9 @@ template <typename Traits> struct BinanceSymbolClient
         switch (command)
         {
         case ServiceCmd::Start: {
-            LOG_DEBUG(core::ctx(this).log(), "BinanceSymbolClient requests symbols from " << address_.target());
+            LOG_DEBUG("BinanceSymbolClient requests symbols from " << address_.target());
             HTTPS::Response response = client_.send(HTTPS::Get(address_.target()));
-            LOG_DEBUG(core::ctx(this).log(), "Response: code:" << response.code);
+            LOG_DEBUG("Response: code:" << response.code);
             const SymbolData symbols{.data = std::move(response.body)};
             Relay::passResponse(this, symbols);
             break;

@@ -2,8 +2,9 @@
     "log": {
         "level": "debug"
     },
-    "other": {
-        "param1": "value1",
-        "param2": "value2"
+    "mdCapture": {
+        "store": "binance-symbols.json",
+        "source": "https://fapi.binance.com/fapi/v1/exchangeInfo",
+        "symbols": ["BTCUSDT"]
     }
 }

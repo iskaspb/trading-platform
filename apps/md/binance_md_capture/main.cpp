@@ -1,15 +1,45 @@
-#include <app/init.h>
+#include "AppConfig.h"
 
-struct AppConfig
+#include <app/init.h>
+#include <assembly/relay.h>
+#include <io/AsioService.h>
+
+template <typename Traits> struct FileMDStore
 {
-    app::LogConfig log;
-    nlohmann::json other;
 };
-DEFINE_CONFIG(AppConfig, log, other);
+
+template <typename Traits> struct BinanceMDClient
+{
+};
+
+struct BinanceMDCaptureAsm : core::Assembly<BinanceMDCaptureAsm, AsioService, FileMDStore, BinanceMDClient>
+{
+    using Config = AppConfig;
+};
+
+struct App : core::Relay<BinanceMDCaptureAsm>
+{
+    explicit App(const AppConfig &config) : core::Relay<BinanceMDCaptureAsm>(config)
+    {
+    }
+
+    void start()
+    {
+        // request(ServiceCmd::Start);
+        ctx().getIO().run();
+    }
+};
 
 int main(int argc, char *argv[])
 {
-    const auto config = app::init<AppConfig>(argc, argv);
-    //...add your code here
-    LOG_INFO("Hello, binance_md_capture!");
+    try
+    {
+        const auto config = app::init<AppConfig>(argc, argv);
+
+        App(config).start();
+    }
+    catch (const std::exception &e)
+    {
+        LOG_ERROR(e.what());
+    }
 }

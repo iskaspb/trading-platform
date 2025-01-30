@@ -2,18 +2,20 @@
 #include "AsioService.h"
 #include "BinanceSymbolClient.h"
 #include "FileSymbolStore.h"
+#include "LoggerNode.h"
 
 #include <app/init.h>
 #include <assembly/relay.h>
 
-struct Assembly : core::Assembly<Assembly, AsioService, FileSymbolStore, BinanceSymbolClient>
+struct SymbolProviderAsm
+    : core::Assembly<SymbolProviderAsm, LoggerNode, AsioService, FileSymbolStore, BinanceSymbolClient>
 {
     using Config = AppConfig;
 };
 
-struct SymbolProvider : core::Relay<Assembly>
+struct SymbolProvider : core::Relay<SymbolProviderAsm>
 {
-    explicit SymbolProvider(const AppConfig &config) : core::Relay<Assembly>(config)
+    explicit SymbolProvider(const AppConfig &config) : core::Relay<SymbolProviderAsm>(config)
     {
     }
 

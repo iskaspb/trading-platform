@@ -1,0 +1,7 @@
+{
+    "log": {
+        "level": "debug"
+    },
+    "request": "https://www.example.com/",
+    "request_": "https://fapi.binance.com/fapi/v1/exchangeInfo"
+}

@@ -25,7 +25,7 @@ struct LogConfig
         std::string name;
         std::optional<std::size_t> rotationSize;
     };
-    std::optional<File> file; //... if not set than console
+    std::optional<File> file{}; //... if not set than console
     // TODO: later add format and more rotation rotation options (time, target location, target file pattern)
 };
 

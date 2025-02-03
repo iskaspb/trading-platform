@@ -4,11 +4,11 @@
 
 struct MDCaptureConfig
 {
-    std::string store, source;
+    std::string fileStore, address;
     std::vector<std::string> symbols;
 };
 
-DEFINE_CONFIG(MDCaptureConfig, store, source, symbols);
+DEFINE_CONFIG(MDCaptureConfig, fileStore, address, symbols);
 
 template <typename Config>
 concept HasMDCaptureConfig = requires(Config config)

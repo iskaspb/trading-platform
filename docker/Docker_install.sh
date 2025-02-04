@@ -27,7 +27,9 @@ apt-get install --assume-yes \
     rapidjson-dev \
     catch2 \
     libssl-dev \
-    libfmt-dev
+    libfmt-dev \
+    capnproto
+
 
 # Create user
 useradd -rm -d /home/user -s /bin/bash -G sudo user

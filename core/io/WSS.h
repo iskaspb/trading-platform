@@ -37,11 +37,13 @@ class WSS
   public:
     using DGate = impl::WSEventsDGate<WSData, OnConnected, OnDisconnected>::Type;
 
-    WSS(const DGate &dgate, net::any_io_executor ex, const URL &url) : WSS(dgate, ex, url.host(), url.port())
+    WSS(const DGate &dgate, net::any_io_executor ex, const URL &url)
+        : WSS(dgate, ex, url.host(), url.port(), url.target())
     {
     }
-    WSS(const DGate &dgate, net::any_io_executor ex, std::string_view host, std::string_view port)
-        : dgate_(dgate), ex_(ex), host_(host), port_(port)
+    WSS(const DGate &dgate, net::any_io_executor ex, std::string_view host, std::string_view port,
+        std::string_view target)
+        : dgate_(dgate), ex_(ex), host_(host), port_(port), target_(target)
     {
         ctx_.set_verify_mode(ssl::verify_none);
     }
@@ -151,7 +153,8 @@ class WSS
                 [](websocket::request_type &req) { req.set(http::field::user_agent, std::string(agentName)); }));
 
             // Perform the websocket handshake
-            ws_.async_handshake(host_, "/", beast::bind_front_handler(&Session::on_handshake, shared_from_this()));
+            ws_.async_handshake(host_, parent_->target_,
+                                beast::bind_front_handler(&Session::on_handshake, shared_from_this()));
         }
 
         void on_handshake(beast::error_code ec)
@@ -180,6 +183,7 @@ class WSS
             }
 
             parent_->dgate_(*parent_, WSData{.data = beast::buffers_to_string(buffer_.data())});
+            buffer_.consume(buffer_.size());
 
             ws_.async_read(buffer_, beast::bind_front_handler(&Session::on_read, shared_from_this()));
         }
@@ -221,5 +225,5 @@ class WSS
     net::any_io_executor ex_;
     ssl::context ctx_{ssl::context::tlsv12_client};
     std::shared_ptr<Session> session_;
-    std::string host_, port_;
+    std::string host_, port_, target_;
 };

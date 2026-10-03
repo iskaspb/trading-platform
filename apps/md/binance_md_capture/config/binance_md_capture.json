@@ -3,8 +3,8 @@
         "level": "debug"
     },
     "mdCapture": {
-        "store": "binance-symbols.json",
-        "source": "https://fapi.binance.com/fapi/v1/exchangeInfo",
-        "symbols": ["BTCUSDT"]
+        "fileStore": "binance-symbols.json",
+        "address": "wss://fstream.binance.com/ws",
+        "symbols": ["btcusdt"]
     }
 }

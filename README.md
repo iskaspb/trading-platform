@@ -1,5 +1,8 @@
-## Why you may need this platform
-This platform is a solution for "C++ for a startup" problem. In the modern world of softare development C++ is a dinosour that literally doesn't allow you to do anything (and complexity of the language is at the end of the list of the issues). Here is a rather old summary that [explains what is wrong with C++](https://www.reddit.com/r/programming/comments/3z60z3/comment/cyjpvip).
+## About
+A foundation repo for building an HFT crypto trading system in C++23. It contains:
+- a CMake build system and the setup for its third-party dependencies (native or Docker);
+- a core framework: configuration, logging, component assembly and async HTTPS/WebSocket I/O, with unit tests;
+- illustrative components, such as [binance_md_capture](apps/md/binance_md_capture), which streams Binance trades over WebSocket.
 
 ## Getting the code
 ```

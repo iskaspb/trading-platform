@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 EXPOSE 22
 ENV DEBIAN_FRONTEND=noninteractive

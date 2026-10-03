@@ -1,4 +1,7 @@
-# Basic system setup
+# Stop at the first error, so a failed step fails the image build
+set -e
+
+# Basic system setup (build-essential brings GCC 15, the default compiler on Ubuntu 26.04)
 apt-get update
 apt-get install --assume-yes \
     build-essential \
@@ -11,14 +14,6 @@ apt-get install --assume-yes \
     openssh-server \
     sudo \
     mc
-
-# Install gcc-14
-add-apt-repository ppa:ubuntu-toolchain-r/test -y
-apt-get update
-apt-get install --assume-yes \
-    build-essential software-properties-common manpages-dev \
-    gcc-14 g++-14
-update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 14 --slave /usr/bin/g++ g++ /usr/bin/g++-14
 
 # Install dependencies
 apt-get install --assume-yes \

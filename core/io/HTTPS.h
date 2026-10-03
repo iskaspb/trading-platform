@@ -97,6 +97,10 @@ class HTTPS
         void connect()
         {
             beast::get_lowest_layer(stream_).connect(resolvedURL_);
+            //...set SNI hostname: many hosts (e.g. Binance API) reject the TLS handshake without it
+            if (!SSL_set_tlsext_host_name(stream_.native_handle(), parent_->host_.c_str()))
+                throw beast::system_error(
+                    beast::error_code(static_cast<int>(::ERR_get_error()), net::error::get_ssl_category()));
             stream_.handshake(ssl::stream_base::client);
         }
 

@@ -25,7 +25,9 @@ apt-get install --assume-yes \
     libboost-all-dev \
     nlohmann-json3-dev \
     rapidjson-dev \
-    catch2
+    catch2 \
+    libssl-dev \
+    libfmt-dev
 
 # Create user
 useradd -rm -d /home/user -s /bin/bash -G sudo user
